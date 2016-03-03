@@ -1,0 +1,57 @@
+Nginx安装配置文档
+
+一：下载Nginx及依赖组建
+
+Nginx:
+下载地址：http://nginx.org/
+Openssl:
+下载地址：http://www.openssl.org/source/
+Zlib:
+下载地址：https://sourceforge.net/projects/libpng/files/zlib/1.2.8/zlib-1.2.8.tar.gz/download
+Pcre:
+下载地址：http://www.pcre.org/
+
+二：安装组建：
+安装openssl:
+1.         解压缩openssl-xx.tar.gz包。
+2.         进入解压缩目录，执行./config。
+3.         make & make install
+安装zlib
+1.         解压缩openssl-xx.tar.gz包。
+2.         进入解压缩目录，执行./configure。
+3.         make & make install
+安装pcre:
+1.         解压缩pcre-xx.tar.gz包。
+2.         进入解压缩目录，执行./configure。
+3.         make & make install
+备用安装模式：
+yum install pcre-devel.i686
+安装Nginx:
+1.         解压缩nginx-xx.tar.gz包。
+2.         进入解压缩目录，执行./configure
+3.         make & make install
+三：配置Nginx
+1:配置反向代理和负载均衡：
+#cd /usr/local/nginx/conf
+#vi nginx.conf
+增加：
+upstream imp {
+             #ip_hash;
+             server 10.170.39.47;
+
+ } 负载均衡配置
+
+
+location / {
+            root   html;
+            index  index.html index.htm;
+            proxy_pass      http://imp;  (反向代理配置地址地址，也可以配置成为负载均衡名称)
+        }
+
+
+location ~ .*\.(html|htm|gif|jpg|jpeg|bmp|png|ico|txt|js|css)$ 
+             { 
+                  root /usr/local/nginx/html/myloan; 
+                  #expires定义用户浏览器缓存的时间为7天，如果静态页面不常更新，可以设置更长，这样可以节省带宽和缓解服务器的压力
+                   expires      7d; 
+               } （动静分离配置）
